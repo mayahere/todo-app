@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  db: 
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mayahere
+  django:
+    image: django-docker:0.0.1
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mayahere
+    depends_on:
+      - db
+
+      
