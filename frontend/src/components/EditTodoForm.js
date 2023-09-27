@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
 
 export const EditTodoForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
 
-  const handleSubmit = (e) => {
+  const getTodo = async () => {
+    const response = await axios.get(`http://127.0.0.1:8000/todos/${id}`);
+    const todo = response.data;
+    setContent(todo.content);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = JSON.parse(localStorage.getItem('todos')) || [];
-    const updatedTodos = response.map((todo) =>
-      todo.id === id ? { ...todo, task: { ...todo.task, content } } : todo
-    );
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
-    navigate(-1);
+    const response = await axios.patch(`http://127.0.0.1:8000/todos/${id}`, {
+      content,
+    });
+    if (response.status === 200) {
+      navigate(-1);
+    }
   };
 
   const handleChange = (event) => {
@@ -22,10 +29,14 @@ export const EditTodoForm = () => {
   };
 
   useEffect(() => {
-    const response = JSON.parse(localStorage.getItem('todos')) || [];
+    getTodo();
+  }, [id]);
+
+  useEffect(() => {
+    const response = JSON.parse(localStorage.getItem("todos")) || [];
     const todo = response.find((todo) => todo.id === id);
     if (todo) {
-      setContent(todo.task.content);
+      setContent(todo.content);
     }
   }, [id]);
 
