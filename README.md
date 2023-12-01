@@ -1,7 +1,7 @@
 # todo-app
 
 
-1. Install docker to install library: [URL] then run docker compose:
+1. Install docker to install library: [URL](https://docs.docker.com/engine/install/) then run docker compose:
    `$ docker-compose up -d`
 
 2. After run docker-compose, install necessary library as required:
